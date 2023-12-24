@@ -8,7 +8,13 @@
     "icons": {
       "48": "favicon.ico"
     },
-    "id": "c71733f0-2691-4afd-927c-a348238543c6",
+    "browser_specific_settings": {
+      "gecko": {
+        "id": "c71733f0-2691-4afd-927c-a348238543c6",
+        "strict_min_version": "42.0"
+      }
+    },
+    
     "host_permissions": [
       "<all_urls>",
       "https://cdn.jsdelivr.net/"
