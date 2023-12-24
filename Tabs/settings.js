@@ -3,6 +3,10 @@ async function main() {
     let text = document.querySelector("#max-text")
     let set_button = document.querySelector("#set")
     let current_default = (await browser.storage.local.get("default_max_open_tabs")).default_max_open_tabs
+    let manage_button = document.querySelector("#manage")
+    manage_button.addEventListener("click", () => {
+        browser.tabs.create({url: "deal_with_it.html"})
+    })
     current_default = current_default != undefined ? current_default : 20;
     text.textContent = current_default;
     input.value = current_default
