@@ -8,7 +8,7 @@
     "icons": {
       "48": "favicon.ico"
     },
-    
+    "id": "Firefox-Tab-Manager-Pro",
     "host_permissions": [
       "<all_urls>",
       "https://cdn.jsdelivr.net/"
