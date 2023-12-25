@@ -1,6 +1,5 @@
 # Tab-Manager-Pro
 Firefox addon to help YOU manage your out of control tabs!
-#### Video Demo:  https://youtu.be/2wkex-YEWO8
 #### Link: https://addons.mozilla.org/en-US/firefox/addon/tab-manager-pro-wolf/
 
 #### Description:
