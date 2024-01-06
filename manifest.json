@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Tab Manager Pro",
-    "version": "1.1",
+    "version": "1.2",
   
     "description": "Helps the user manage their tabs in a constructive way, leading a popup at a definable number of tabs opened. Certain actions are able to be done when you decide to do something about it, such as separating into a new window, or simply closing them.",
   
