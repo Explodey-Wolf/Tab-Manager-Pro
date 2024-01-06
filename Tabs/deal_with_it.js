@@ -1,4 +1,6 @@
 let selected_tab = 0;
+let alt_selected_tab = 0;
+let alt_selected_tabs = []
 let selected_tabs = []
 var keys = {};
 document.onkeydown = function(e){keys[e.key.toLowerCase()]=true;};
@@ -66,6 +68,7 @@ async function click(tab) {
 
     const shift_pressed = keys.shift ?? false;
     const ctrl_pressed = keys.control ?? false;
+    const alt_pressed = keys.alt ?? false;
     let tab_children = document.querySelector("#tabs_table").childNodes
     tab_children = Array.from(tab_children)
     id = tab_children.indexOf(tab)
@@ -84,20 +87,55 @@ async function click(tab) {
         }
         console.log(selected_tabs)
     }
+
+    else if (alt_pressed) {
+        console.log("hALT")
+        if ((alt_selected_tab ?? 0) == 0) {
+            console.log(alt_selected_tab)
+            
+            alt_selected_tab = selected_tab ?? tab_children[id];
+            alt_selected_tabs = [alt_selected_tab]
+
+            //selected_tab = document.querySelector(`#item-${id}`);
+
+            
+        }
+        
+            console.log("HALT")
+            alt_selected_tabs = [];
+            //let selected_tab_id = parseInt(selected_tab.id.replace("item-", ""));
+            let alt_selected_tab_id = tab_children.indexOf(alt_selected_tab);
+            console.log("YAY", alt_selected_tab_id, id)
+            let start = Math.min(alt_selected_tab_id, id);
+            let end = Math.max(alt_selected_tab_id, id);
+            for (let i = start; i <= end; i++) {
+                // If tab is not in the list of selected tabs
+                console.log(alt_selected_tabs.concat(selected_tabs), alt_selected_tab)
+                if ((alt_selected_tabs.concat(selected_tabs)).indexOf(tab_children[i]) == -1) {
+                    console.log("I", i)
+                    alt_selected_tabs.push(tab_children[i]);
+                }
+            }
+            
+        
+
+    }
+
     else if (!shift_pressed) {
-        selected_tab = tab_children[id]
+        selected_tab = tab_children[id];
         //selected_tab = document.querySelector(`#item-${id}`);
-        selected_tabs = []
-        selected_tabs.push(tab_children[id])
-        console.log("SEE", selected_tabs, id)
+        selected_tabs = [];
+        selected_tabs.push(tab_children[id]);
+        console.log("SEE", selected_tabs, id);
     
     
     }
+    
     else {
         if ((selected_tab ?? 0) == 0) {
-            selected_tab = tab_children[id]
+            selected_tab = tab_children[id];
             //selected_tab = document.querySelector(`#item-${id}`);
-            console.log("EGJ")
+            console.log("EGJ");
             selected_tabs = [selected_tab];
         }
         else {
@@ -114,16 +152,26 @@ async function click(tab) {
         }
 
     }
+
+    if (!alt_pressed) {
+        selected_tabs = selected_tabs.concat(alt_selected_tabs)
+        alt_selected_tab = 0
+        alt_selected_tabs = [];
+        
+    }
     console.log(selected_tabs)
     
     change_classes(tabs)
 }
 
 function change_classes(tabs) {
+    
     for (let tab of tabs) {
         tab.classList.remove("selected")
     }
-    for (let tab of selected_tabs) {
+    
+    for (let tab of selected_tabs.concat(alt_selected_tabs)) {
+        console.log("Tabs: " + tab)
         tab.classList.add("selected")
     }
 }
@@ -165,26 +213,75 @@ async function contextmenu_buttons() {
     let contextmenu = document.querySelector("#context-menu");
     let close = contextmenu.querySelector("#close");
     let window = contextmenu.querySelector("#window");
-    close.addEventListener("click", () => {
-        for (let tab of selected_tabs) {
-            tab_id = browser.tabs.query({})
-            browser.tabs.remove(parseInt(tab.id.replace("item-", "")));
-        }
-        reset_tabs()
-    });
-    document.addEventListener("keyup", (e) => {
-        if (e.key == "Delete") {
-            for (let tab of selected_tabs) {
-                tab_id = browser.tabs.query({})
-                browser.tabs.remove(parseInt(tab.id.replace("item-", "")));
+    close.addEventListener("click", async () => {
+        let tabs = selected_tabs.concat(alt_selected_tabs)
+            let tab_ids = []
+            for (let tab of tabs) {
+                tab_ids.push(parseInt(tab.id.replace("item-", "")))
             }
+            /*current_index = tabs.indexOf((tab_children[await browser.tabs.query({active: true, currentWindow: true})[0].id]))
+            //if (current_index != -1)
+            tabs.splice(current_index, 1)
+            
+            for (let tab of tabs) {
+                // not needed 
+                // tab_id = browser.tabs.query({})
+                console.log("Deleting!")
+                console.log("1")
+                if (parseInt(tab.id.replace("item-", "")) == (()) {
+                    console.log("2")
+                    setTimeout(() => {
+                        browser.tabs.remove(parseInt(tab.id.replace("item-", "")));
+                        reset_tabs()
+                    },
+                    1000
+                    )
+                    continue;
+                }
+                else {
+                    browser.tabs.remove(parseInt(tab.id.replace("item-", "")));
+                }
+            }*/
+            browser.tabs.remove(tab_ids)
             reset_tabs()
-            console.log(document.querySelector("#tabs_parent").scrollTop);
+    });
+    document.addEventListener("keyup", async (e) => {
+        if (e.key == "Delete") {
+            let tabs = selected_tabs.concat(alt_selected_tabs)
+            let tab_ids = []
+            for (let tab of tabs) {
+                tab_ids.push(parseInt(tab.id.replace("item-", "")))
+            }
+            /*current_index = tabs.indexOf((tab_children[await browser.tabs.query({active: true, currentWindow: true})[0].id]))
+            //if (current_index != -1)
+            tabs.splice(current_index, 1)
+            
+            for (let tab of tabs) {
+                // not needed 
+                // tab_id = browser.tabs.query({})
+                console.log("Deleting!")
+                console.log("1")
+                if (parseInt(tab.id.replace("item-", "")) == (()) {
+                    console.log("2")
+                    setTimeout(() => {
+                        browser.tabs.remove(parseInt(tab.id.replace("item-", "")));
+                        reset_tabs()
+                    },
+                    1000
+                    )
+                    continue;
+                }
+                else {
+                    browser.tabs.remove(parseInt(tab.id.replace("item-", "")));
+                }
+            }*/
+            browser.tabs.remove(tab_ids)
+            reset_tabs()
         }
     })
     window.addEventListener("click", async function() {
         let urls = []
-        for (let tab of selected_tabs) {
+        for (let tab of selected_tabs.concat(alt_selected_tabs)) {
             let tab_id = parseInt(tab.id.replace("item-", ""))
             let temp = await browser.tabs.get(tab_id);
             if (temp.url == "about:newtab") {
